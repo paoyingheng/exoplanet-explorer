@@ -66,5 +66,5 @@ st.altair_chart(chart, use_container_width=True)
 st.write("📊 **Filtered Exoplanet Data**")
 st.dataframe(df_filtered)
 
-st.write("🚀 Data Source: [NASA Exoplanet Archive](https://exoplanetarchive.ipac.caltech.edu/)")
+st.write("🚀 Data Source: [NASA Exoplanet Archive](https://exoplanetarchive.ipac.caltech.edu/) (Planetary Systems Composite Data)")
 st.write("<p style='color:grey;'>A project by PY Heng</p>", unsafe_allow_html=True)
