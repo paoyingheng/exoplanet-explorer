@@ -2,30 +2,30 @@ import streamlit as st
 import pandas as pd
 import altair as alt
 
-# ✅ Set page config at the very beginning
+
 st.set_page_config(page_title="Exoplanet Data Explorer", page_icon="🪐", layout="wide")
 
 st.title("🪐 Exoplanet Data Explorer")
 st.write("Explore key parameters of confirmed exoplanets from NASA's Exoplanet Archive")
 
-# ✅ Short explanation about the project and how to use it
+
 st.markdown(
     """
-    This interactive tool allows you to explore exoplanets discovered beyond our solar system.
+    This interactive tool allows you to explore exoplanets discovered beyond our Solar System.
     - Use the **filters** to adjust the mass range and distance from Earth.
-    - The **visualization** displays exoplanet mass vs. temperature, with color indicating distance from Earth.
+    - The **visualization** displays exoplanet equlibrium temperature vs. mass (Earth masses), with color indicating distance from Earth.
     - The **data table** provides detailed information on filtered exoplanets.
     
     🚀 *Explore the universe with real astronomical data!*
     """
 )
 
-# ✅ Load dataset from CSV with error handling and cleaning
+# load exoplanets.csv and clean data
 @st.cache_data
 def load_data():
     df = pd.read_csv("exoplanets.csv", sep=",", na_values=["NA", ""])
     
-    # Select relevant columns
+    #select relevant columns
     df = df[["pl_name", "pl_eqt", "pl_bmasse", "pl_orbsmax", "pl_rade", "st_teff", "sy_dist"]].copy()
     df = df.rename(columns={
         "pl_name": "Exoplanet", 
@@ -37,14 +37,14 @@ def load_data():
         "sy_dist": "Distance from Earth (pc)"
     })
     
-    # Drop rows with missing values
+    #remove rows with missing values
     df = df.dropna()
     
     return df
 
 df = load_data()
 
-# Filters
+# filters
 min_mass, max_mass = st.slider("Select Exoplanet Mass Range (Earth Masses)", 0.1, 50.0, (0.5, 5.0))
 min_distance, max_distance = st.slider("Select Distance Range (pc)", 0, 1000, (0, 500))
 df_filtered = df[
@@ -52,7 +52,7 @@ df_filtered = df[
     (df["Distance from Earth (pc)"] >= min_distance) & (df["Distance from Earth (pc)"] <= max_distance)
 ]
 
-# Exoplanet Data Visualization
+# data visualization
 chart = alt.Chart(df_filtered).mark_circle(size=100).encode(
     x=alt.X("Mass (Earth Masses):Q", title="Exoplanet Mass (Earth Masses)"),
     y=alt.Y("Equilibrium Temp (K):Q", title="Equilibrium Temperature (K)"),
@@ -62,7 +62,7 @@ chart = alt.Chart(df_filtered).mark_circle(size=100).encode(
 
 st.altair_chart(chart, use_container_width=True)
 
-# Display filtered data
+#display filtered data
 st.write("📊 **Filtered Exoplanet Data**")
 st.dataframe(df_filtered)
 
